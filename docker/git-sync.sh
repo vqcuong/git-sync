@@ -1,12 +1,28 @@
 #!/bin/sh
+
+echo "Git Sync ..."
+
 if [ ! -n $GIT_REPO ]; then
 	echo "!!!	Have to specify your repo in GIT_REPO env to clone"
 	exit 1
 fi
 
-GIT_DEST=${GIT_DEST:-"/git/cloned_repo"}
+extract_git_host() {
+	echo $(echo $GIT_REPO | sed 's|.*//||; s|.*@||; s|/.*||; s|:.*||')
+}
+
+extract_git_repo_name() {
+    re="^.*\/(.+).git*$"
+    if [[ $GIT_REPO =~ $re ]]; then    
+        echo ${BASH_REMATCH[1]}
+    fi
+}
+
+GIT_REPO_NAME=$(extract_git_repo_name)
+GIT_DEST=${GIT_DEST:-"/git/$GIT_REPO_NAME"}
 GIT_SSH_ENABLE=${GIT_SSH_ENABLE:-"false"}
-GIT_REPO_PORT=${GIT_REPO_PORT:-"22"}
+GIT_SSH_PORT=${GIT_SSH_PORT:-"22"}
+GIT_HOST=$(extract_git_host)
 
 if [ "$GIT_SSH_ENABLE" == "true" ]; then
 	echo "***	Enabling SSH to clone repo ..."
@@ -27,16 +43,13 @@ if [ "$GIT_SSH_ENABLE" == "true" ]; then
 		cp -rL $GIT_SSH_KNOWN_HOSTS ~/.ssh/known_hosts
 	elif [ -f "$GIT_SECRET_DIR/known_hosts" ]; then
 		cp -rL $GIT_SECRET_DIR/known_hosts ~/.ssh/known_hosts
-	elif [ "$GIT_REPO_HOST" != "" ]; then
-		echo "***	Run keyscan from GIT_REPO_HOST: ${GIT_REPO_HOST}"
-		ssh-keyscan -p $GIT_REPO_PORT $GIT_REPO_HOST > ~/.ssh/known_hosts
-		echo -e "Host $GIT_REPO_HOST\n  Port $GIT_REPO_PORT\n  IdentityFile ~/.ssh/private" > ~/.ssh/config
 	else
-		echo "!!! You have to specify GIT_SSH_KNOWN_HOSTS (absolute path)"
-		echo "		or mount file named 'known_hosts' to GIT_SECRET_DIR folder"
-		echo "		or give GIT_REPO_HOST (ex: gitlab.com) to run ssh-keyscan"
-		exit 1
+		echo "Warn: known_hosts is not existed at $GIT_SSH_KNOWN_HOSTS or $GIT_SECRET_DIR/known_hosts"
+		echo "Run keyscan from GIT_HOST: ${GIT_HOST}"
+		ssh-keyscan -p $GIT_SSH_PORT $GIT_HOST > ~/.ssh/known_hosts
 	fi
+
+	echo -e "Host $GIT_HOST\n  Port $GIT_SSH_PORT\n  IdentityFile ~/.ssh/private" > ~/.ssh/config
 	chmod 600 ~/.ssh/*
 fi
 
@@ -49,6 +62,7 @@ if [ "$GIT_INIT_CLONE" == "true" ]; then
 		mkdir -p $GIT_DEST
 	fi
 	git clone $GIT_REPO -b $GIT_BRANCH $GIT_DEST
+	echo "Cloned $GIT_REPO (branch: $GIT_BRANCH) into $GIT_DEST"
 fi
 
 # to break the infinite loop when we receive SIGTERM
@@ -62,6 +76,8 @@ function git_fetch() {
 }
 
 GIT_SYNC_WAIT=${GIT_SYNC_WAIT:-"10"}
+echo "Synchronizing every $GIT_SYNC_WAIT ..."
+
 cd $GIT_DEST
 while true; do
 	git_fetch
