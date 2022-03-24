@@ -39,5 +39,5 @@ services:
       - GIT_SSH_PRIVATE_KEY=/.private-key
     volumes:
       - .ssh-private-key:/.private-key
-      - myvolume:/git:rw # default cloned directory is /git/git-sync
+      - ./myvolume:/git:rw # default cloned directory is /git/git-sync
 ```
