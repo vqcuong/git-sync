@@ -13,4 +13,5 @@ RUN apk --update add git less openssh \
 VOLUME /git
 WORKDIR /git
 
-ENTRYPOINT [ "/entrypoint.sh", "sync" ]
+ENTRYPOINT [ "/entrypoint.sh" ]
+CMD [ "sync" ]

@@ -16,6 +16,7 @@ GIT_REPO: git repository endpoint, supported for both https and ssh protocol
 GIT_BRANCH: target branch to clone
 GIT_REPO_PORT: your git port. default: 22
 GIT_DEST: destionation directory to clone repository into, default: /git/[repository_name]
+GIT_SYNC_WAIT: number of seconds delay for each sync time
 GIT_SSH_ENABLE: whether ssh enabled or not, default: false
 ```
 - For ssh

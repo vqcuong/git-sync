@@ -12,10 +12,8 @@ extract_git_host() {
 }
 
 extract_git_repo_name() {
-    re="^.*\/(.+).git*$"
-    if [[ $GIT_REPO =~ $re ]]; then    
-        echo ${BASH_REMATCH[1]}
-    fi
+	basename=$(basename $GIT_REPO)
+	echo ${basename%.*}
 }
 
 GIT_REPO_NAME=$(extract_git_repo_name)
