@@ -20,7 +20,7 @@ GIT_DEST_NAME=${GIT_DEST_NAME:-$(extract_git_repo_name)}
 GIT_DEST_DIR=${GIT_DEST_DIR:-"/git/$GIT_DEST_NAME"}
 GIT_SSH_ENABLE=${GIT_SSH_ENABLE:-"false"}
 GIT_SSH_PORT=${GIT_SSH_PORT:-"22"}
-GIT_HOST=$(extract_git_host)
+GIT_HOST=${GIT_HOST:-$(extract_git_host)}
 
 if [ "$GIT_SSH_ENABLE" == "true" ]; then
 	echo "***	Enabling SSH to clone repo ..."

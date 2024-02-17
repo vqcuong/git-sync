@@ -12,15 +12,17 @@ Environment:
 
 - Basic
 ```
-GIT_REPO (require): git repository endpoint, supported for both https and ssh protocol
+GIT_REPO (require): git repository endpoint, support both https and ssh protocols
+GIT_HOST (optional): host of git server, default: extracted host from $GIT_REPO
 GIT_BRANCH (optional): target branch to clone, default: master
-GIT_DEST_NAME (optional): subdirectory inside /git folder to clone repository into, default: <repository name>
+GIT_DEST_NAME (optional): subdirectory inside /git folder to clone repository into, default: extracted repository name from $GIT_REPO
 GIT_DEST_DIR (optional): destionation directory to clone repository into, default: /git/$GIT_DEST_NAME
 GIT_SYNC_WAIT_SECOND (optional): number of seconds delay for each sync time, default: 10
 GIT_SSH_ENABLE (optional): whether ssh enabled or not, default: false
 ```
 - For ssh
 ```
+GIT_SSH_PORT (optional): ssh port of git server, default: 22
 GIT_SSH_KNOWN_HOSTS (optional): known_hosts file path. If not provided, it will be auto-scaned from git server
 GIT_SSH_PRIVATE_KEY (require when GIT_SSH_ENABLE=true): ssh private key path
 GIT_SECRET_DIR (optional): ssh secret directory containing known_hosts and ssh private key, may use as replacement of GIT_SSH_KNOWN_HOSTS and GIT_SSH_PRIVATE_KEY
