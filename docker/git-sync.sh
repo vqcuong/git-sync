@@ -73,11 +73,11 @@ function git_fetch() {
 	date
 }
 
-GIT_SYNC_WAIT=${GIT_SYNC_WAIT:-"10"}
-echo "Synchronizing every $GIT_SYNC_WAIT ..."
+GIT_SYNC_WAIT_SECOND=${GIT_SYNC_WAIT_SECOND:-"10"}
+echo "Synchronizing every $GIT_SYNC_WAIT_SECOND ..."
 
 cd $GIT_DEST_DIR
 while true; do
 	git_fetch
-	sleep $GIT_SYNC_WAIT
+	sleep $GIT_SYNC_WAIT_SECOND
 done
