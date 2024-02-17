@@ -16,9 +16,8 @@ extract_git_repo_name() {
 	echo ${basename%.*}
 }
 
-GIT_REPO_NAME=$(extract_git_repo_name)
-echo "AAAAAAAAAAAAAAA: $GIT_REPO_NAME"
-GIT_DEST=${GIT_DEST:-"/git/$GIT_REPO_NAME"}
+GIT_DEST_NAME=${GIT_DEST_NAME:-$(extract_git_repo_name)}
+GIT_DEST_DIR=${GIT_DEST_DIR:-"/git/$GIT_DEST_NAME"}
 GIT_SSH_ENABLE=${GIT_SSH_ENABLE:-"false"}
 GIT_SSH_PORT=${GIT_SSH_PORT:-"22"}
 GIT_HOST=$(extract_git_host)
@@ -55,13 +54,13 @@ fi
 GIT_INIT_CLONE=${GIT_INIT_CLONE:-"true"}
 if [ "$GIT_INIT_CLONE" == "true" ]; then
 	GIT_BRANCH=${GIT_BRANCH:-"master"}
-	if [ -d "$GIT_DEST" ]; then
-		rm -rf $(find $GIT_DEST -mindepth 1)
+	if [ -d "$GIT_DEST_DIR" ]; then
+		rm -rf $(find $GIT_DEST_DIR -mindepth 1)
 	else
-		mkdir -p $GIT_DEST
+		mkdir -p $GIT_DEST_DIR
 	fi
-	git clone $GIT_REPO -b $GIT_BRANCH $GIT_DEST
-	echo "Cloned $GIT_REPO (branch: $GIT_BRANCH) into $GIT_DEST"
+	git clone $GIT_REPO -b $GIT_BRANCH $GIT_DEST_DIR
+	echo "Cloned $GIT_REPO (branch: $GIT_BRANCH) into $GIT_DEST_DIR"
 fi
 
 # to break the infinite loop when we receive SIGTERM
@@ -77,7 +76,7 @@ function git_fetch() {
 GIT_SYNC_WAIT=${GIT_SYNC_WAIT:-"10"}
 echo "Synchronizing every $GIT_SYNC_WAIT ..."
 
-cd $GIT_DEST
+cd $GIT_DEST_DIR
 while true; do
 	git_fetch
 	sleep $GIT_SYNC_WAIT
