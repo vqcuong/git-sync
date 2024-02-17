@@ -1,8 +1,8 @@
 ### Build docker image
 ```
-./docker/build.sh [repo] [tag_version]
+./docker/build.sh <dockerhub repository> <tag_name|version>
 
-Example: ./docker/build.sh vqcuong96/ latest
+Example: ./docker/build.sh vqcuong96/ latest (image name is vqcuong96/git-sync:latest)
 ```
 
 ### Usage
