@@ -23,6 +23,11 @@ GIT_SSH_PORT=${GIT_SSH_PORT:-"22"}
 GIT_HOST=${GIT_HOST:-$(extract_git_host)}
 
 if [ "$GIT_SSH_ENABLE" == "true" ]; then
+	if [[ ! $GIT_REPO =~ ^git@.* ]]; then
+ 		echo "GIT_REPO must be startwith git@ when GIT_SSH_ENABLE=true"
+		exit 1
+	fi
+ 
 	echo "***	Enabling SSH to clone repo ..."
 	GIT_SECRET_DIR=${GIT_SECRET_DIR:-"/etc/git-secret"}
 	mkdir -p ~/.ssh/
@@ -49,6 +54,13 @@ if [ "$GIT_SSH_ENABLE" == "true" ]; then
 
 	echo -e "Host $GIT_HOST\n  Port $GIT_SSH_PORT\n  IdentityFile ~/.ssh/private" > ~/.ssh/config
 	chmod 600 ~/.ssh/*
+elif [[ -n $GIT_USERNAME && -n $GIT_ACCESS_TOKEN ]]; then
+	if [[ ! $GIT_REPO =~ ^https://.* ]]; then
+ 		echo "GIT_REPO must be startwith https:// when using username/password authentication"
+		exit 1
+	fi
+	git_repo_without_https=${GIT_REPO#"https://"}
+ 	GIT_REPO="https://$GIT_USERNAME:$GIT_ACCESS_TOKEN@$git_repo_without_https"
 fi
 
 GIT_INIT_CLONE=${GIT_INIT_CLONE:-"true"}
