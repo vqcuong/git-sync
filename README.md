@@ -18,6 +18,8 @@ GIT_BRANCH (optional): target branch to clone, default: master
 GIT_DEST_NAME (optional): subdirectory inside /git folder to clone repository into, default: extracted repository name from $GIT_REPO
 GIT_DEST_DIR (optional): destionation directory to clone repository into, default: /git/$GIT_DEST_NAME
 GIT_SYNC_WAIT_SECOND (optional): number of seconds delay for each sync time, default: 10
+GIT_USERNAME (optional): username when using username/password authentication
+GIT_ACCESS_TOKEN (optional): personal access token when using username/password authentication
 GIT_SSH_ENABLE (optional): whether ssh enabled or not, default: false
 ```
 - For ssh
